@@ -32,7 +32,7 @@ from typing import Dict, List, Callable
 
 import dash
 from dash import Dash, dependencies
-from dash._utils import split_callback_id, inputs_to_dict
+from dash._utils import split_callback_id, inputs_to_dict, format_tag
 from django.urls import reverse
 from django.utils.text import slugify
 from flask import Flask
@@ -763,7 +763,7 @@ class WrappedDash(Dash):
         scripts = self._generate_scripts_html()
         css = self._generate_css_dist_html()
         config = self._generate_config_html()
-        metas = self._generate_meta_html()
+        metas = self._generate_meta()
         renderer = self._generate_renderer()
         title = getattr(self, 'title', 'Dash')
         if self._favicon:
@@ -780,8 +780,13 @@ class WrappedDash(Dash):
   </div>
 </div>
 '''
+        # Patch: Handle meta as tags like in Dash 2.17.1
+        tags = "\n      ".join(
+            format_tag("meta", x, opened=True, sanitize=True) for x in metas
+        )
+
         index = self.interpolate_index(
-            metas=metas, title=title, css=css, config=config,
+            metas=tags, title=title, css=css, config=config,
             scripts=scripts, app_entry=_app_entry, favicon=favicon,
             renderer=renderer)
 
