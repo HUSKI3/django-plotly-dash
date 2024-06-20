@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "django_plotly_dash"}]
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 dash = ">=2.0"
 plotly = "^5.22.0"
 dpd-components = "^0.1.0"
